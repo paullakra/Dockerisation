@@ -7,8 +7,10 @@ from src.model_module import generate_summary
 
 
 class TextInput(BaseModel):
+    unix_time: int
     text: str
-    userid: int
+    user_id: int
+    hash_value: int = hash(text)
 
 
 app = FastAPI()
@@ -22,6 +24,7 @@ def root():
 @app.post("/input/", response_class=PlainTextResponse)
 def get_summary(text_wrapper: TextInput):
     temp = generate_summary(text_wrapper.text)
+    # send inference to database instead of user
     return temp
 
 
