@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+
+  model_module:
+    build: "./model_module"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - rabbit_mq
+      - postgres_container
+
+  rabbit_mq:
+    hostname: rabbit
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  postgres_container:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER= postgres # The PostgreSQL user (useful to connect to the database)
+      - POSTGRES_PASSWORD= 12345678 # The PostgreSQL password (useful to connect to the database)
+      - POSTGRES_DB= docking_project # The PostgreSQL default database (automatically created at first launch)
