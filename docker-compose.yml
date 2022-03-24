@@ -1,25 +1,32 @@
-version: "3.7"
+version: "3"
 services:
 
-  model_module:
-    build: "./model_module"
-    ports:
-      - "5000:5000"
-    depends_on:
-      - rabbit_mq
-      - postgres_container
-
-  rabbit_mq:
-    hostname: rabbit
-    image: rabbitmq:latest
+  pgadmin:
+    container_name: pgadmin_console
+    image: dpage/pgadmin4
     environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=mypass
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - "5050:5050"
+    depends_on:
+      - postgresserver
 
-  postgres_container:
+#  rabbitserver:
+#    container_name: rabbit_server
+#    image: rabbitmq:latest
+#    environment:
+#      - RABBITMQ_DEFAULT_USER=admin
+#      - RABBITMQ_DEFAULT_PASS=mypass
+#      - RABBITMQ_DEFAULT_VHOST=myvhost
+#    ports:
+#      - "15672:15672"
+#      - "5672:5672"
+
+
+
+  postgresserver:
+    container_name: postgres_database
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -27,3 +34,14 @@ services:
       - POSTGRES_USER= postgres # The PostgreSQL user (useful to connect to the database)
       - POSTGRES_PASSWORD= 12345678 # The PostgreSQL password (useful to connect to the database)
       - POSTGRES_DB= docking_project # The PostgreSQL default database (automatically created at first launch)
+
+  model_module:
+    container_name: model_module
+    build: "./model_module"
+    ports:
+      - "5000:5000"
+
+
+
+
+# celery -A input_module.worker:celery_app worker --without-heartbeat --without-gossip --without-mingle
