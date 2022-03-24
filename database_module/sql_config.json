@@ -3,5 +3,6 @@
   "user": "postgres",
   "password": "12345678",
   "port": "5432",
-  "connect_timeout":"1"
+  "connect_timeout":"1",
+  "dbname": "postgres"
 }
